@@ -1,0 +1,43 @@
+/*导航样式开始*/
+#navigation { 
+	width:784px; 
+	padding:8px; 
+	margin:8px auto; 
+	background:#3B5998;
+	height:18px;
+}
+#navigation ul li { 
+	float:left; 
+	margin-right:14px;
+	position: relative ;
+	z-index:100;
+}
+#navigation ul li a { 
+	display:block;
+	padding:0 8px; 
+	background:#EEEEEE; 
+	font-weight:700;
+}
+#navigation ul li a:hover { 
+	background:none; 
+	color:#fff;
+}
+#navigation ul li ul{
+	background-color: #88C366;
+	position: absolute;
+	width: 80px;
+	overflow:hidden;
+	display:none;
+}
+#navigation ul li:hover ul{
+	background-color: #88C366;
+	position: absolute;
+	width: 100px;
+	display:block;
+}
+#navigation ul li ul li{
+	border-bottom: 1px solid #BBB;
+	text-align: left;
+	width: 100%;
+}
+/*导航样式结束*/

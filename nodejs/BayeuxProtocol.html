@@ -1,0 +1,187 @@
+<html>
+<body>
+<h2>Bayeux Protocol Beginning</h2>
+<ul>
+<li><b>Http was designed as a protocol for retriving documents from remote servers</b></li>
+<li>Communication between the client and the server is always initiated by the client and never by the server</li>
+<li>Connections between the client and the server are transient and the server do not maintain any long-time state information regarding the client</li>
+</ul>
+
+<h2>Twist the Formula</h2>
+<ul>
+<li><b>Why, then, should you want the server to be able contact the client, and maintain persistent connections</b></li>
+<br/>
+</ul>
+<b>-There are serveral suitable common use case-</b>
+
+
+<h2>use cases: AdviceME</h2>
+<ul>
+<li><b>Monitoring and Data Feeds</b></li>
+<li>Client as a Dashboard or Monitor</li>
+<li>Demand for monitoring applications</li>
+<li>Market data feeds</li>
+<li>Security Alerting</li>
+<li>SLA Violation Advisor</li>
+</ul>
+<img src="./BayeuxProtocolRes/image_8[1].png" width="500" >
+
+<h2>use cases:Please Wait</h2>
+<ul>
+Progress Updates
+<li>Communicating progress on long-running server-side activities</li>
+<li>Report progress on long running server task</li>
+</ul>
+<img src="./BayeuxProtocolRes/image_10[1].png" width="500" >
+
+<h2>use cases:Share with me</h2>
+<ul>
+Chat and Collaboration
+<li>Chat System</li>
+<li>Photo sharing</li>
+<li>On-line Gaming</li>
+<li>Collaborative Tools</li>
+</ul>
+<img src="./BayeuxProtocolRes/image_12[1].png" width="500" >
+
+
+<h2>Actual Approachs</h2>
+<ul>
+Pushing Using Polling
+<br/>Collaborative abilit by pooling the server with client regular request asking for update
+<li>Network wasteful</li>
+<li>Server resource exhaustion</li>
+<li>Client repeatedly contact the server to check for change</li>
+<li>Pooling schedule not affected</li>
+</ul>
+
+<img src="./BayeuxProtocolRes/image_14[1].png" width="500" >
+
+<h2>Piggybacking</h2>
+<ul>
+<li>The contents of the response aren't strictly reltated to the nature of the request</li>
+<li>Response will also contain any change to the domain model</li>
+<li>Pooling schedule reset</li>
+</ul>
+<img src="./BayeuxProtocolRes/image_16[1].png" width="500" >
+
+<h2>Comet techniques</h2>
+<ul>
+<li>Keep the response stream open for a significantly longer time</li>
+<li>Server send several pieces of data back in the response</li>
+<li>Comet request is held open on the server for a while, multiple discrete changes are communicated</li>
+<li>Long Pooling</li>
+</ul>
+<img src="./BayeuxProtocolRes/image_18[1].png" width="500" >
+
+
+<h2>Comet techniques</h2>
+<ul>
+<li>Most modern web browser, permit only 2 concurrent HTTP connection to the given domain</li>
+<li>If more than one request is being held open against the same server, ordinary request will be blocked</li>
+<li>(same for different broser-tab)</li>
+</ul>
+<img src="./BayeuxProtocolRes/image_20[1].png" width="500" >
+
+
+<h2>Comet techniques</h2>
+<ul>
+<li>Traditional servers allocate a thread to each incoming request</li>
+<li>Design work well when serving large volume of short lived request</li>
+<li>Long polls are held open request for a considerable length of time</li>
+<li>Thread-per-Request model is generally unable to scale to large number of clients</li>
+<li>Java servlet model itself is inherently a thread-per-request</li>
+</ul>
+<img src="./BayeuxProtocolRes/image_22[1].png" width="500" >
+
+<h2>Comet techniques</h2>
+<ul>
+<li>Java servlet model was developed to serve a very different traffic profile</li>
+<li>A Large number of simultaneous request from Comet clients would exhaust the server's thread pool(doesn't scale well)</li>
+<li>More Comet-Friendly server architectures from the the java-community</li>
+<li>Continuations(Jetty 6)</li>
+<li>Grizzly</li>
+<li>Tomcat 6</li>
+<li>JSR 315 Servlet 3.0</li>
+</ul>
+<img src="./BayeuxProtocolRes/image_24[1].png" width="500" >
+
+<h2>Comet and Reverse Ajax</h2>
+<p>Bayeux provides a very nice abstraction on top of Comet transport, by casting the transfer data in term of channels, to which clients can publish and subscribe</p>
+
+<h2>Bayeux-->CometD</h2>
+<ul>
+Bayeux
+<li>Emerging de facto standard for comet</li>
+<li>Existing reference implementation</li>
+Comet<br/>
+<ul>
+<li>Provided by the people at Sitepen;</li>
+<li>The same as DOJO Javascript Tookit</li>
+</ul>
+</ul>
+
+
+<ul>
+<li>Adopts exactly the same approaches and provides a flexible, sacalabel API based around a publish-subscribe model</li>
+<li>Data sent through, is always assigned a notional "channel"</li>
+</ul>
+
+<img src="./BayeuxProtocolRes/image_28[1].png" width="500" >
+
+
+<ul>
+<li>Channels allows multiple decoupled conversations on top of a single HTTP connection</li>
+<li>The client-side CometD and the server-side Bayeux implementation communication over several notional channels, all bundled within a single HTTP request-response</li>
+</ul>
+
+
+<ul>
+<li>Cometd is a project by the Dojo Fundation to implement Bayeux specification</li>
+<li>Bayeux is a purpose to implement responsive user interation for web clients using Ajax and server-push techniques called Comet</li>
+</ul>
+
+<ul>
+<b>The message are routed via named channels and can be delived</b>
+<li>server2client</li>
+<li>client2server</li>
+<li>client2client</li>
+</ul>
+
+<h2>Bayeux message are specified in JSON notation</h2>
+<br/>{
+<br/>"channel":"some/name",
+<br/>"clientld":"83js73jsh29sjd92",
+<br/>"data":{"myapp":"specific data", value:100};
+<br/>}
+
+<br/><b>JavaScript Object Notation is a lightweight data-interchage format</b>
+<ul>
+<li>Channels are by default broadcast publish subscribe</li>
+<li>Channels are identified by names and always starts with "/"</li>
+<li>Channels pattern support trailling wildcards of either "*" or "**"</li>
+<li>/news/*</li>
+Valid chnnedls:/news/italy, /news/uk,...
+<li>/news/**</li>
+Valid channels:/news/italy, /news/italy/lazio...
+<li>Bayeux events is sent from the server to the client via HTTP response to a HTTP request sent in anticipation</li>
+<li>Polling Transport</li>
+<li>On receipt of the HTTP response, the bayeux client issues a new bayeux message</li>
+<li>Streaming Transport</li>
+<li>Use streaming technique (forever response), allowing multiple message to be sent over the same response</li>
+<li>To solve the issue of bi-directional communications, Bayeux client will use two HTTP connections
+
+</ul>
+
+
+<img src="./BayeuxProtocolRes/" width="500" >
+<img src="./BayeuxProtocolRes/" width="500" >
+<img src="./BayeuxProtocolRes/" width="500" >
+<img src="./BayeuxProtocolRes/" width="500" >
+<img src="./BayeuxProtocolRes/" width="500" >
+<img src="./BayeuxProtocolRes/" width="500" >
+<img src="./BayeuxProtocolRes/" width="500" >
+<img src="./BayeuxProtocolRes/" width="500" >
+<img src="./BayeuxProtocolRes/" width="500" >
+</body>
+</html>
